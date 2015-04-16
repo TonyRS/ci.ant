@@ -187,4 +187,21 @@ The `install-feature` task installs a feature packaged as a Subsystem Archive (E
     
 	<wlp:install-feature installDir="${wlp_install_dir}" name="mongodb-2.0" whenFileExists="ignore" acceptLicense="true"/>
 
+### clean task
+---
+
+The `clean` task remove the content of logs directory of a Liberty profile server instance only when the server is stopped.
+
+#### Parameters
+
+| Attribute | Description | Required |
+| --------- | ------------ | ----------|
+| installDir | Location of the Liberty profile server installation. | Yes |
+| serverName | Name of the Liberty profile server instance. The default value is `defaultServer`. | No |
+| userDir | Value of the `${wlp_user_dir}` variable. The default value is `${installDir}/usr/servers/${serverName}`. | No | 
+| outputDir | Value of the `${wlp_output_dir}` variable. The default value is `${installDir}/usr/servers/${serverName}`. | No | 
+
+#### Examples
+    <wlp:server id="wlp.ant.test" installDir="${wlp_install_dir}" operation="stop"/>
+    <wlp:clean ref="wlp.ant.test" />
 

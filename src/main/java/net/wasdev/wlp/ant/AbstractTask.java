@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2014.
+ * (C) Copyright IBM Corporation 2014, 2015.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -275,7 +275,43 @@ public abstract class AbstractTask extends Task {
         }
 
     }
-
+    
+    /**
+     * Verify if the Server is stopped.
+     * 
+     * @return true if the server is stopped. Otherwise, false
+     * @throws Exception if the command can´t be executed
+     */
+    protected boolean isServerStopped() throws Exception {
+        
+        String wlpDirectory = null;
+        if (isWindows) {
+            wlpDirectory = installDir + "\\bin\\server.bat";
+            processBuilder.environment().put("EXIT_ALL", "1");
+        } else {
+            wlpDirectory = installDir + "/bin/server";
+        }
+        
+        List<String> commandStatus = new ArrayList<String>();
+        commandStatus.add(wlpDirectory);
+        commandStatus.add("status");
+        
+        if (serverName != null && !serverName.equals("")) {
+            commandStatus.add(serverName);
+        }
+        
+        processBuilder.command(commandStatus);
+        
+        Process p = processBuilder.start();
+        int exitCode = getReturnCode(p, processBuilder.command().toString());
+        
+        if (exitCode == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+   
     private class StreamCopier extends Thread {
         private final BufferedReader reader;
         private boolean joined;
